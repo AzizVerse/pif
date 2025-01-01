@@ -1,0 +1,347 @@
+<div class="container">
+  <h2>Margin Predictions</h2>
+  <p>
+    Predict premium margins to evaluate the profitability of insurance products.
+  </p>
+  <form [formGroup]="form">
+    <div class="form-group">
+      <label for="Premiums_Collected">Premiums Collected:</label>
+      <input
+        id="Premiums_Collected"
+        type="number"
+        formControlName="Premiums_Collected"
+        placeholder="Enter premiums collected"
+      />
+    </div>
+    <div class="form-group">
+      <label for="Client_Coverage">Client Coverage:</label>
+      <input
+        id="Client_Coverage"
+        type="number"
+        formControlName="Client_Coverage"
+        placeholder="Enter client coverage"
+      />
+    </div>
+    <div class="form-group">
+      <label for="Coverage_Duration">Coverage Duration (months):</label>
+      <input
+        id="Coverage_Duration"
+        type="number"
+        formControlName="Coverage_Duration"
+        placeholder="Enter coverage duration in months"
+        (input)="updateDerivedFields()"
+      />
+    </div>
+    <div class="form-group">
+      <label for="Number_of_Claims">Number of Claims:</label>
+      <input
+        id="Number_of_Claims"
+        type="number"
+        formControlName="Number_of_Claims"
+        placeholder="Enter number of claims"
+        (input)="updateDerivedFields()"
+      />
+    </div>
+    <div class="form-group">
+      <label for="Severity_of_Claims">Severity of Claims:</label>
+      <input
+        id="Severity_of_Claims"
+        type="number"
+        formControlName="Severity_of_Claims"
+        placeholder="Enter severity of claims"
+        (input)="updateDerivedFields()"
+      />
+    </div>
+    <div class="form-group">
+      <label for="Total_Claims_Cost">Total Claims Cost:</label>
+      <input
+        id="Total_Claims_Cost"
+        type="number"
+        formControlName="Total_Claims_Cost"
+        placeholder="Calculated: Total Claims Cost"
+        readonly
+      />
+    </div>
+    <div class="form-group">
+      <label for="Risk_Factor">
+        Risk Factor:
+        <small class="description">(Enter a value between 0 and 1. A higher risk factor indicates greater potential losses.)</small>
+      </label>
+      <input
+        id="Risk_Factor"
+        type="number"
+        formControlName="Risk_Factor"
+        placeholder="Enter risk factor (0 - 1)"
+        min="0"
+        max="1"
+        step="0.01"
+      />
+    </div>
+    <div class="form-group">
+      <label for="Frequency">Frequency:</label>
+      <input
+        id="Frequency"
+        type="number"
+        formControlName="Frequency"
+        placeholder="Calculated: Frequency"
+        readonly
+      />
+    </div>
+    <div class="button-group">
+      <button type="button" class="btn btn-primary" (click)="predict(1)">Predict Model 1</button>
+      <button type="button" class="btn btn-secondary" (click)="predict(2)">Predict Model 2</button>
+      <button type="button" class="btn btn-success" (click)="predict(3)">Predict Model 3</button>
+      <button type="button" class="btn btn-warning" (click)="predict(4)">Predict Model 4</button>
+    </div>
+  </form>
+
+  <div *ngIf="formattedResults[1]">
+    <h4>Prediction Result (Model 1):</h4>
+    <ul>
+      <li *ngFor="let item of formattedResults[1]">{{ item.key }}: {{ item.value }}</li>
+    </ul>
+  </div>
+  <div *ngIf="formattedResults[2]">
+    <h4>Prediction Result (Model 2):</h4>
+    <ul>
+      <li *ngFor="let item of formattedResults[2]">{{ item.key }}: {{ item.value }}</li>
+    </ul>
+  </div>
+  <div *ngIf="formattedResults[3]">
+    <h4>Prediction Result (Model 3):</h4>
+    <ul>
+      <li *ngFor="let item of formattedResults[3]">{{ item.key }}: {{ item.value }}</li>
+    </ul>
+  </div>
+  <div *ngIf="formattedResults[4]">
+    <h4>Prediction Result (Model 4):</h4>
+    <ul>
+      <li *ngFor="let item of formattedResults[4]">{{ item.key }}: {{ item.value }}</li>
+    </ul>
+  </div>
+</div>
+
+
+
+<div class="container" style="margin-top:10px ;">
+  <h2>Claim Provision Predictions</h2>
+  <p>
+    Estimate claim provisions to simulate future reimbursements.
+  </p>
+  <form [formGroup]="provisionForm">
+    <div class="form-group">
+      <label for="Insurance_Type">Insurance Type:</label>
+      <select id="Insurance_Type" formControlName="Insurance_Type">
+        <option *ngFor="let type of insuranceTypes; let i = index" [value]="i">{{ type }}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="Premiums_Collected">Premiums Collected:</label>
+      <input
+        id="Premiums_Collected"
+        type="number"
+        formControlName="Premiums_Collected"
+        placeholder="Enter premiums collected"
+      />
+    </div>
+    <div class="form-group">
+      <label for="Client_Coverage">Client Coverage:</label>
+      <input
+        id="Client_Coverage"
+        type="number"
+        formControlName="Client_Coverage"
+        placeholder="Enter client coverage"
+      />
+    </div>
+    <div class="form-group">
+      <label for="Coverage_Duration">Coverage Duration (months):</label>
+      <input
+        id="Coverage_Duration"
+        type="number"
+        formControlName="Coverage_Duration"
+        placeholder="Enter coverage duration in months"
+      />
+    </div>
+    <div class="form-group">
+      <label for="Remaining_Years">Remaining Years:</label>
+      <input
+        id="Remaining_Years"
+        type="number"
+        formControlName="Remaining_Years"
+        placeholder="Enter remaining years"
+      />
+    </div>
+    <div class="form-group">
+      <label for="Risk_Factor">
+        Risk Factor:
+        <small class="description">(Enter a value between 0 and 1. A higher risk factor indicates greater potential losses.)</small>
+      </label>
+      <input
+        id="Risk_Factor"
+        type="number"
+        formControlName="Risk_Factor"
+        placeholder="Enter risk factor (0 - 1)"
+        min="0"
+        max="1"
+        step="0.01"
+      />
+    </div>
+    <div class="form-group">
+      <label for="Policy_Adjustment">Policy Adjustment:</label>
+      <input
+        id="Policy_Adjustment"
+        type="number"
+        formControlName="Policy_Adjustment"
+        placeholder="Enter policy adjustment"
+      />
+    </div>
+    <div class="button-group">
+      <button type="button" class="btn btn-primary" (click)="predictProvision(5)">Predict Model 5</button>
+      <button type="button" class="btn btn-secondary" (click)="predictProvision(6)">Predict Model 6</button>
+      <button type="button" class="btn btn-success" (click)="predictProvision(7)">Predict Model 7</button>
+      <button type="button" class="btn btn-warning" (click)="predictProvision(8)">Predict Model 8</button>
+      <button type="button" class="btn btn-info" (click)="predictProvision(9)">Predict Model 9</button>
+    </div>
+  </form>
+
+  <div *ngFor="let modelId of [5, 6, 7, 8, 9]">
+    <div *ngIf="formattedProvisionResults[modelId]">
+      <h4>Prediction Result (Model {{ modelId }}):</h4>
+      <ul>
+        <li *ngFor="let item of formattedProvisionResults[modelId]">{{ item.key }}: {{ item.value }}</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="margin-top: 10px;">
+  <h2>Claim Provision Predictions</h2>
+  <p>
+    Estimate claim provisions  with more features  to simulate future reimbursements.
+    This feature is designed specifically for clients who have a history of claims that have already been processed,
+  </p>
+  <form [formGroup]="claimForm">
+    <div class="form-group">
+      <label for="Insurance_Type">Insurance Type:</label>
+      <select id="Insurance_Type" formControlName="Insurance_Type">
+        <option *ngFor="let type of insuranceTypes; let i = index" [value]="i">{{ type }}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="Premiums_Collected">Premiums Collected:</label>
+      <input
+        id="Premiums_Collected"
+        type="number"
+        formControlName="Premiums_Collected"
+        placeholder="Enter premiums collected"
+      />
+    </div>
+    <div class="form-group">
+      <label for="Client_Coverage">Client Coverage:</label>
+      <input
+        id="Client_Coverage"
+        type="number"
+        formControlName="Client_Coverage"
+        placeholder="Enter client coverage"
+      />
+    </div>
+    <div class="form-group">
+      <label for="Coverage_Duration">Coverage Duration (months):</label>
+      <input
+        id="Coverage_Duration"
+        type="number"
+        formControlName="Coverage_Duration"
+        placeholder="Enter coverage duration in months"
+      />
+    </div>
+    <div class="form-group">
+      <label for="Number_of_Claims">Number of Claims:</label>
+      <input
+        id="Number_of_Claims"
+        type="number"
+        formControlName="Number_of_Claims"  
+        placeholder="Enter number of claims"
+        (input)="eq()"
+      />
+    </div>
+    <div class="form-group">
+      <label for="Severity_of_Claims">Severity of Claims:</label>
+      <input
+        id="Severity_of_Claims"
+        type="number"
+        formControlName="Severity_of_Claims"
+        placeholder="Enter severity of claims"
+        (input)="eq()"
+      />
+    </div>
+    <div class="form-group">
+      <label for="Total_Claims_Cost">Total Claims Cost:</label>
+      <input
+        id="Total_Claims_Cost"
+        type="number"
+        formControlName="Total_Claims_Cost"
+        placeholder="Calculated: Total Claims Cost"
+        readonly
+      />
+    </div>
+    <div class="form-group">
+      <label for="Risk_Factor">
+        Risk Factor:
+        <small class="description">(Enter a value between 0 and 1. A higher risk factor indicates greater potential losses.)</small>
+      </label>
+      <input
+        id="Risk_Factor"
+        type="number"
+        formControlName="Risk_Factor"
+        placeholder="Enter risk factor (0 - 1)"
+        min="0"
+        max="1"
+        step="0.01"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="Profit_Margin">Profit Margin:</label>
+      <input
+        id="Profit_Margin"
+        type="number"
+        formControlName="Profit_Margin"
+        placeholder="Enter profit margin"
+      />
+    </div>
+    <div class="form-group">
+      <label for="Remaining_Years">Remaining Years:</label>
+      <input
+        id="Remaining_Years"
+        type="number"
+        formControlName="Remaining_Years"
+        placeholder="Enter remaining years"
+      />
+    </div>
+    <div class="form-group">
+      <label for="Policy_Adjustment">Policy Adjustment:</label>
+      <input
+        id="Policy_Adjustment"
+        type="number"
+        formControlName="Policy_Adjustment"
+        placeholder="Enter policy adjustment"
+      />
+    </div>
+    <div class="button-group">
+      <button type="button" class="btn btn-primary" (click)="predictClaim(10)">Predict Model 10</button>
+      <button type="button" class="btn btn-secondary" (click)="predictClaim(11)">Predict Model 11</button>
+      <button type="button" class="btn btn-success" (click)="predictClaim(12)">Predict Model 12</button>
+      <button type="button" class="btn btn-warning" (click)="predictClaim(13)">Predict Model 13</button>
+      <button type="button" class="btn btn-info" (click)="predictClaim(14)">Predict Model 14</button>
+    </div>
+  </form>
+
+  <div *ngFor="let modelId of [10, 11, 12, 13, 14]">
+    <div *ngIf="formattedClaimResults[modelId]">
+      <h4>Prediction Result (Model {{ modelId }}):</h4>
+      <ul>
+        <li *ngFor="let item of formattedClaimResults[modelId]">{{ item.key }}: {{ item.value }}</li>
+      </ul>
+    </div>
+  </div>
+</div>

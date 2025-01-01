@@ -1,0 +1,74 @@
+<mat-card class="cardWithShadow">
+  <mat-card-actions class="back-button">
+    <button mat-raised-button color="accent" (click)="goBack()">Back</button>
+  </mat-card-actions>
+  <mat-card-title>Reclamation Details</mat-card-title>
+  <mat-card-content>
+    <div class="two-columns">
+      <div class="column">
+        <h3>User Details</h3>
+        <p><strong>Name:</strong> {{ reclamation?.user?.name }}</p>
+        <p><strong>Email:</strong> {{ reclamation?.user?.email }}</p>
+      </div>
+
+      <div class="column">
+        <h3>Insurance Details</h3>
+        <p *ngIf="reclamation?.insurance?.policy; else noPolicy"><strong>Policy:</strong> {{ reclamation?.insurance?.policy }}</p>
+        <ng-template #noPolicy>
+          <p><strong>Policy:</strong> Not Available</p>
+        </ng-template>
+        <p *ngIf="reclamation?.insurance?.type; else noType"><strong>Type:</strong> {{ reclamation?.insurance?.type }}</p>
+        <ng-template #noType>
+          <p><strong>Type:</strong> Not Available</p>
+        </ng-template>
+      </div>
+    </div>
+
+    <div class="two-columns">
+      <div class="column">
+        <h3>Claim Details</h3>
+        <p *ngIf="reclamation?.claim?.status; else noStatus"><strong>Status:</strong> {{ reclamation?.claim?.status }}</p>
+        <ng-template #noStatus>
+          <p><strong>Status:</strong> Not Available</p>
+        </ng-template>
+        <p *ngIf="reclamation?.claim?.details; else noDetails"><strong>Details:</strong> {{ reclamation?.claim?.details }}</p>
+        <ng-template #noDetails>
+          <p><strong>Details:</strong> Not Available</p>
+        </ng-template>
+      </div>
+
+      <div class="column">
+        <h3>Reclamation Details</h3>
+        <p><strong>Type of Reclamation:</strong> {{ reclamation?.reclamationType }}</p>
+        <p><strong>Description:</strong> {{ reclamation?.description }}</p>
+        <p><strong>Submitted Date:</strong> {{ reclamation?.dateSubmitted }}</p>
+        <p><strong>Status:</strong> {{ reclamation?.status }}</p>
+        <p><strong>Resolution:</strong> {{ reclamation?.resolution }}</p>
+        <p><strong>Date Resolved:</strong> {{ reclamation?.dateResolved }}</p>
+      </div>
+    </div>
+
+    <h3>Update Reclamation</h3>
+    <!-- Wrap fields in a form tag with the formGroup -->
+    <form [formGroup]="form">
+      <mat-form-field class="full-width">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          <mat-option value="PENDING">Pending</mat-option>
+          <mat-option value="IN_REVIEW">In Review</mat-option>
+          <mat-option value="RESOLVED">Resolved</mat-option>
+          <mat-option value="REJECTED">Rejected</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Resolution</mat-label>
+        <input matInput formControlName="resolution" />
+      </mat-form-field>
+    </form>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-raised-button color="primary" (click)="saveChanges()">Save Changes</button>
+  </mat-card-actions>
+</mat-card>
